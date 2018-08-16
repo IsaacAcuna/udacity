@@ -1,0 +1,122 @@
+html {
+     font-size: 20px;
+}
+ @media(max-width: 1280px) {
+     html {
+         font-size: 18px;
+    }
+     .gallery-content {
+         max-width: 340px;
+    }
+}
+ @media(max-width: 1024px) {
+     .hero-message{
+         font-size: 14px;
+    }
+     .gallery-content {
+         max-width: 220px;
+    }
+}
+ @media(max-width: 775px) {
+     .gallery {
+         flex-direction:column;
+    }
+}
+ @media(max-width: 465px) {
+     .site-title {
+         line-height: 1.2em;
+         font-size: 1.2em;
+    }
+}
+ *, *:before, *:after {
+     box-sizing: inherit;
+}
+ body {
+     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+     font-size: 16px;
+     color: #2d3c49;
+}
+ body > .container {
+     max-width: 1280px;
+     margin: 0 auto;
+}
+ img {
+     max-width: 100%;
+}
+ .main-header {
+     display: flex;
+     flex-direction: row;
+     justify-content:space-between;
+     align-content: space-between;
+     align-items: baseline;
+     border-bottom: 4px solid #2d3c49;
+}
+ #logo {
+     align-self: flex-start;
+     width: 128px;
+     height: 128px;
+}
+ #main-header-text {
+     text-transform: uppercase;
+     text-align: right;
+     align-self: flex-end;
+}
+ .hero {
+     margin-top: 10px;
+}
+ .hero-banner {
+     display: block;
+     margin: 0 auto;
+     max-width: 100%;
+     border: 1px solid #2d3c49;
+     border-radius: 5px;
+}
+ .hero-message {
+     max-width: 90%;
+     margin: 0 auto;
+}
+ .hero-message p {
+     text-transform: full-width;
+}
+ .header {
+     line-height: 1.2em;
+     color: #02b3e4;
+     margin: 10px;
+}
+ .gallery-header {
+     width: 100%;
+}
+ .gallery {
+     display: flex;
+     flex-direction: row;
+     flex-flow: wrap;
+     justify-content: center;
+     align-content: center;
+     width: 100%;
+}
+ .gallery-content {
+     border: 1px solid #2d3c49;
+     border-radius: 5px;
+     width: 400px;
+     margin: 5px;
+}
+ .gallery-content:hover {
+     -webkit-box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.75);
+     -moz-box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.75);
+     box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.75);
+}
+ .gallery-content img {
+     width: 100%;
+     height: auto;
+     border-bottom: 1px solid #2d3c49;
+}
+ .desc {
+     padding: 15px;
+     text-align: center;
+}
+ .footer {
+     padding: 10px;
+     font-size: xx-small;
+     text-align: center;
+}
+ 
