@@ -1,0 +1,6 @@
+<?xml version="1.0" ?><svg clip-rule="evenodd" fill-rule="evenodd" image-rendering="optimizeQuality" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg"><defs><style type="text/css"><![CDATA[
+    .str0 {stroke:#434242;stroke-width:10}
+    .str1 {stroke:#434242;stroke-width:10;stroke-linejoin:round}
+    .fil1 {fill:#FFFFFF}
+    .fil0 {fill:url(#id0)}
+   ]]></style><radialGradient cx="48%" fx="48%" fy="50%" id="id0"><stop offset="0" stop-color="#0af"/><stop offset="1" stop-color="#008BFF"/></radialGradient></defs><g id="Layer_x0020_1"><path class="fil0 str0" d="M30 250c0 122 98 220 220 220s220-98 220-220-98-220-220-220-220 98-220 220z"/><path class="fil1 str1" d="M242 308h-10c0-18 1-31 3-40s7-22 16-37c8-16 14-29 17-38 2-10 4-21 4-35 0-22-5-38-13-48s-18-16-30-16c-9 0-16 3-22 8-5 3-7 7-7 11 0 2 2 7 5 12 7 13 10 23 10 32 0 8-2 15-8 20-5 6-12 8-20 8-9 0-17-3-23-9-7-7-10-15-10-26 0-19 9-36 25-51 17-14 40-22 70-22 31 0 55 8 72 23 16 15 25 33 25 55 0 15-5 29-13 42-9 14-25 28-49 44-17 11-28 20-33 29-5 8-8 21-9 38zm-2 36c10 0 20 3 27 11 8 8 12 17 12 28s-4 20-12 28c-7 8-17 12-27 12-11 0-21-4-28-12-8-8-12-17-12-28s4-20 12-28c7-8 17-11 28-11z"/></g></svg>
