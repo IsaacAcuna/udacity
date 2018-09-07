@@ -4,6 +4,8 @@ const cardData = [{
         msg: 'Someone already bit this donut?! It\'s mine now!',
         flipped: 0,
         matched: 0,
+        points: 100,
+        effect: '+5s',
     },
     {
         file: '2.svg',
@@ -11,6 +13,8 @@ const cardData = [{
         msg: 'You\'ll be fine, just... fine...',
         flipped: 0,
         matched: 0,
+        points: 250,
+        effect: '-30s',
     },
     {
         file: '3.svg',
@@ -18,6 +22,8 @@ const cardData = [{
         msg: 'You feel a surge of pure intellectual power.',
         flipped: 0,
         matched: 0,
+        points: 250,
+        effect: '+30s',
     },
     {
         file: '4.svg',
@@ -25,13 +31,17 @@ const cardData = [{
         msg: 'You are weary after dealing with such an exhausting foe!',
         flipped: 0,
         matched: 0,
+        points: 175,
+        effect: '-25s'
     },
     {
         file: '5.svg',
-        name: 'Honey Comb of Fortified Resolve',
+        name: 'Honeycomb of Fortified Resolve',
         msg: 'The honey comb begins to glow as your resolve strengthens.',
         flipped: 0,
         matched: 0,
+        points: 175,
+        effect: '+25s',
     },
     {
         file: '6.svg',
@@ -39,6 +49,8 @@ const cardData = [{
         msg: 'Bake this, punk!',
         flipped: 0,
         matched: 0,
+        points: 125,
+        effect: '+10s',
     },
     {
         file: '7.svg',
@@ -46,6 +58,8 @@ const cardData = [{
         msg: 'You have been struck by a servere case of the itis.',
         flipped: 0,
         matched: 0,
+        points: 125,
+        effect: '-10s',
     },
     {
         file: '8.svg',
@@ -53,6 +67,8 @@ const cardData = [{
         msg: 'Hrmm, I don\'t feel like I\'ve grown significantly...',
         flipped: 0,
         matched: 0,
+        points: 100,
+        effect: '-5s',
     }
 ];
 
@@ -70,12 +86,11 @@ function setUserData(userObj) {
     if (userPayload) {
         setCookie('ThoughtNotData', userPayload, 7);
         return 1;
-    } else {
-        return;
     }
 }
 
 function setCookie(name, value, days) {
+    console.log("setCookie called");
     var expires = "";
     if (days) {
         var date = new Date();
@@ -158,59 +173,69 @@ function flipFlop() {
     }
 }
 
-
-
-
-
 function matchCheck() {
-    let myFlippedCards = document.querySelectorAll( '.flipped:not(.matched-card)' );
-    console.log(myFlippedCards);
-    /*
-    if (cardPair[0].getAttribute("card-name") === cardPair[1].getAttribute("card-name")) { // It's a match
-        let cardName = cardPair[0].getAttribute("card-name");
-        let cardMsg = cardPair[0].getAttribute("card-msg");
-        cardPair[0].classList.add('matched-card');
-        cardPair[0].nextElementSibling.classList.add('matched-card');
-        cardPair[1].classList.add('matched-card');
-        cardPair[1].nextElementSibling.classList.add('matched-card');
 
-        setTimeout(function() { flipFlop(); }, 500);
-    } else { // not a match
-        setTimeout(function() { flipFlop(); }, 500);
-    }*/
+    let myFlippedCards = document.querySelectorAll( '.flipped:not(.matched-card)' );
+    
+    if (myFlippedCards.length == 2 ) {
+        if (myFlippedCards[0].getAttribute("card-name") === myFlippedCards[1].getAttribute("card-name")) { // It's a match
+            
+            let cardName = myFlippedCards[0].getAttribute("card-name");
+            let cardMsg = myFlippedCards[0].getAttribute("card-msg");
+        
+            myFlippedCards[0].classList.add('matched-card');
+            myFlippedCards[0].nextElementSibling.classList.add('matched-card');
+        
+            myFlippedCards[1].classList.add('matched-card');
+            myFlippedCards[1].nextElementSibling.classList.add('matched-card');
+            
+            setTimeout(function() { flipFlop(); }, 500);
+            return 1;
+        } else { // not a match
+            setTimeout(function() { flipFlop(); }, 500);
+            return 0;
+        }
+    } 
 }
 
 function flipCard(cardElement) {
+    console.log("cardElement: " + cardElement);
     let user = getUserData();
+    let matchedSet = matchCheck();
+    let matchCount = 0;
+    if ( matchedSet && !user.matchCount ) {
+        matchCount = 1;
+    } else if ( matchedSet && user.matchCount ) {
+        matchCount = user.matchCount;
+    }
+    
     let flipCount = 0; // Card flip counter
     if (!user.flipCount) {
         user.flipCount = 1;
     } else {
         flipCount = user.flipCount;
     } 
+    
     cardElement.classList.add("flipped"); // Flip the card
     cardElement.classList.remove("hidden"); // Do not hide it
     flipCount++;
-    if (flipCount % 2 == 0) { // If we have a pair
-        matchCheck();
-    }
+    matchCount++;
     user.flipCount = flipCount;
+    user.matchCount = matchCount;
+    console.log("SET USER CALLED")
     setUserData(user);
 }
 
 function cardControl(clickedElements) {
-    let myFlippedCards = document.getElementsByClassName("flipped");
-    let cardsInPlay = [];
-    for (let i = 0; i < myFlippedCards.length; i++) {
-        if (!myCards[i].classList.contains("matched-card") ) {
-            cardsInPlay.push(myFlippedCards[i]);
-        }
-    }
-    if ( cardsInPlay.length <= 2 ) {
-        for (let cardElement of cardsInPlay) { // Loop through child elements of flipped cards in play
-            flipCard(cardElement); // Flip the card
-        } else {
-            console.log('patience is a virtue');
+    let myFlippedCards = document.querySelectorAll( '.flipped:not(.matched-card)' );
+    if ( myFlippedCards.length <= 2 ) { 
+        for ( let i = 0; i < clickedElements.length; i++ ) {
+            if ( clickedElements[i].classList.contains("cards") ) {
+                flipCard(clickedElements[i]);
+            }
+            if ( clickedElements[i].classList.contains("cover") ) {
+                clickedElements[i].classList.add("hidden");
+            }
         }
     }
 }
