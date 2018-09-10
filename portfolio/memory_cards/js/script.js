@@ -5,7 +5,7 @@ const cardData = [{
         flipped: 0,
         matched: 0,
         points: 100,
-        effect: '+5s',
+        effect: '+5',
     },
     {
         file: '2.svg',
@@ -14,7 +14,7 @@ const cardData = [{
         flipped: 0,
         matched: 0,
         points: 250,
-        effect: '-30s',
+        effect: '-30',
     },
     {
         file: '3.svg',
@@ -23,7 +23,7 @@ const cardData = [{
         flipped: 0,
         matched: 0,
         points: 250,
-        effect: '+30s',
+        effect: '+30',
     },
     {
         file: '4.svg',
@@ -32,7 +32,7 @@ const cardData = [{
         flipped: 0,
         matched: 0,
         points: 175,
-        effect: '-25s'
+        effect: '-25'
     },
     {
         file: '5.svg',
@@ -41,7 +41,7 @@ const cardData = [{
         flipped: 0,
         matched: 0,
         points: 175,
-        effect: '+25s',
+        effect: '+25',
     },
     {
         file: '6.svg',
@@ -50,7 +50,7 @@ const cardData = [{
         flipped: 0,
         matched: 0,
         points: 125,
-        effect: '+10s',
+        effect: '+10',
     },
     {
         file: '7.svg',
@@ -59,7 +59,7 @@ const cardData = [{
         flipped: 0,
         matched: 0,
         points: 125,
-        effect: '-10s',
+        effect: '-10',
     },
     {
         file: '8.svg',
@@ -68,7 +68,7 @@ const cardData = [{
         flipped: 0,
         matched: 0,
         points: 100,
-        effect: '-5s',
+        effect: '-5',
     }
 ];
 
@@ -142,11 +142,15 @@ function buildCards(cardData) {
         cardDiv.style.backgroundImage = "url('./img/" + data.file + "')";
         cardDiv.setAttribute('card-name', data.name);
         cardDiv.setAttribute('card-msg', data.msg);
-        if ( data.flipped ) {
+        cardDiv.setAttribute('points', data.points);
+        cardDiv.setAttribute('effect', data.effect);
+        cardDiv.setAttribute('flipped', data.msg);
+        cardDiv.setAttribute('matched', data.msg);
+        if (data.flipped) {
             cardDiv.classList.add('flipped');
             cardDiv.classList.remove('hidden');
         }
-        if ( data.matched ) {
+        if (data.matched) {
             cardDiv.classList.add('matched-card')
         }
     }
@@ -173,90 +177,137 @@ function flipFlop() {
     }
 }
 
-function matchCheck() {
-
-    let myFlippedCards = document.querySelectorAll( '.flipped:not(.matched-card)' );
-    
-    if (myFlippedCards.length == 2 ) {
-        if (myFlippedCards[0].getAttribute("card-name") === myFlippedCards[1].getAttribute("card-name")) { // It's a match
-            
-            let cardName = myFlippedCards[0].getAttribute("card-name");
-            let cardMsg = myFlippedCards[0].getAttribute("card-msg");
-        
-            myFlippedCards[0].classList.add('matched-card');
-            myFlippedCards[0].nextElementSibling.classList.add('matched-card');
-        
-            myFlippedCards[1].classList.add('matched-card');
-            myFlippedCards[1].nextElementSibling.classList.add('matched-card');
-            
-            setTimeout(function() { flipFlop(); }, 500);
-            return 1;
-        } else { // not a match
-            setTimeout(function() { flipFlop(); }, 500);
-            return 0;
-        }
-    } 
+function parseStrTime(strTime) {
+    return Math.floor(parseInt(strTime, 10) * 1000);
 }
 
-function flipCard(cardElement) {
-    console.log("cardElement: " + cardElement);
-    let user = getUserData();
-    let matchedSet = matchCheck();
-    let matchCount = 0;
-    if ( matchedSet && !user.matchCount ) {
-        matchCount = 1;
-    } else if ( matchedSet && user.matchCount ) {
-        matchCount = user.matchCount;
+function gameOver() {
+    console.log("TODO: Game Is Over");
+}
+
+function gameTime( strTime ) {
+    let gameTime = new Date().getTime() + parseStrTime('+120');
+    if ( strTime ) {
+        gameTime = Math.abs(gameTime + parseStrTime(strTime));   
     }
     
+    return gameTime
+}
+
+function matchCheck() {
+
+    let myFlippedCards = document.querySelectorAll('.flipped:not(.matched-card)');
+
+    if (myFlippedCards.length == 2) {
+        if (myFlippedCards[0].getAttribute("card-name") === myFlippedCards[1].getAttribute("card-name")) { // It's a match
+
+            let cardName = myFlippedCards[0].getAttribute("card-name");
+            let cardMsg = myFlippedCards[0].getAttribute("card-msg");
+
+            myFlippedCards[0].setAttribute('flipped', '1');
+            myFlippedCards[0].classList.add('matched-card');
+            myFlippedCards[0].nextElementSibling.classList.add('matched-card');
+
+            myFlippedCards[1].setAttribute('flipped', '1');
+            myFlippedCards[1].classList.add('matched-card');
+            myFlippedCards[1].nextElementSibling.classList.add('matched-card');
+
+            setTimeout(function() {
+                flipFlop();
+            }, 500);
+            return myFlippedCards[0];
+        } else { // not a match
+            setTimeout(function() {
+                flipFlop();
+            }, 500);
+            return false;
+        }
+    }
+}
+
+function processCards(cardElement) {
+    cardElement.classList.add("flipped"); // Flip the card
+    cardElement.classList.remove("hidden"); // Do not hide it
+    let user = getUserData();
+    let matchedCard = matchCheck();
+    let matchCount = 0;
+    if (!user.matchCount) {
+        user.matchCount = 1;
+    } else {
+        matchCount = user.matchCount;
+    }
     let flipCount = 0; // Card flip counter
     if (!user.flipCount) {
         user.flipCount = 1;
     } else {
         flipCount = user.flipCount;
-    } 
-    
-    cardElement.classList.add("flipped"); // Flip the card
-    cardElement.classList.remove("hidden"); // Do not hide it
+    }
     flipCount++;
-    matchCount++;
+    if (matchedCard) {
+        matchCount++;
+        user.score = userScore(matchedCard);
+        user.time = getAttribute(matchedCard, "points")
+        //timer(getAttribute(points));
+        timer('+120');
+    }
     user.flipCount = flipCount;
     user.matchCount = matchCount;
-    console.log("SET USER CALLED")
     setUserData(user);
 }
 
 function cardControl(clickedElements) {
-    let myFlippedCards = document.querySelectorAll( '.flipped:not(.matched-card)' );
-    if ( myFlippedCards.length <= 2 ) { 
-        for ( let i = 0; i < clickedElements.length; i++ ) {
-            if ( clickedElements[i].classList.contains("cards") ) {
-                flipCard(clickedElements[i]);
+    let myFlippedCards = document.querySelectorAll('.flipped:not(.matched-card)');
+    if (myFlippedCards.length <= 2) {
+        for (let i = 0; i < clickedElements.length; i++) {
+            if (clickedElements[i].classList.contains("cards")) {
+                processCards(clickedElements[i]);
             }
-            if ( clickedElements[i].classList.contains("cover") ) {
-                clickedElements[i].classList.add("hidden");
+            if (clickedElements[i].classList.contains("cover")) {
+                if (clickedElements[i].classList.contains("cover")) {
+                    clickedElements[i].classList.add("hidden");
+                }
             }
         }
     }
 }
 
 
+
+function timer() {
+    let timerDisplay = document.getElementById("timer");
+    let currentTime  = new Date().getTime();
+    const playTime = setInterval(function() {
+        
+        let timeRemainder = Math.abs( gameTime - currentTime );
+        let minutes = Math.floor((timeRemainder % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((timeRemainder % (1000 * 60)) / 1000)
+        timerDisplay.innerHTML = minutes + ":" + seconds;
+        
+        if (timeRemainder < 0) {
+            console.log("Time is up!");
+            clearInterval(playTime);
+            gameOver();
+        }
+    }, 1000 );
+}
+
 function startGame() {
     let user = getUserData();
     if (!user) {
         user = welcome();
-        const deckOne = shuffle(cardData); // Get first deck of random cards
-        const deckTwo = shuffle(cardData); // Get second deck of random cards
-        const cardSet = deckOne.concat(deckTwo); // combine them into a single array
-        user.cardSet = cardSet;
+        const deckOne = cardData.slice(0); // Get first deck of random cards
+        const deckTwo = cardData.slice(0); // Get second deck of random cards
+        const cardSet = shuffle(deckOne.concat(deckTwo)); // combine them into a single array
+        user.cardSet  = cardSet;
         user.score = 0;
-        user.time = 5;
-        buildCards(cardSet); // Build complete set from decks and add content to HTML.
+        user.time = 0;
         setUserData(user);
+        buildCards(cardSet); // Build complete set from decks and add content to HTML.
     } else {
         buildCards(user.cardSet);
     }
     setBoard();
+    timer();
 }
 
 function setBoard() {
@@ -270,9 +321,11 @@ function setBoard() {
     }
 }
 
-function userScore() {
+function userScore(matchedCard) {
     let user = getUserData();
-
+    let matchScore = matchedCard.getAttribute("points")
+    user.score = parseInt(user.score, 10) + parseInt(matchScore, 10);
+    return user.score;
 }
 
 document.addEventListener('DOMContentLoaded', function() { // Document ready
@@ -292,6 +345,5 @@ document.addEventListener('DOMContentLoaded', function() { // Document ready
             startGame();
         }, 500);
     }
-
 
 });
