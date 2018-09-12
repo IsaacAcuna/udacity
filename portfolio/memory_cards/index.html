@@ -3,18 +3,42 @@
 
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/style.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="js/script.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <title>Thought Not - Memory Game</title>
+    <title>Grocery List Mania</title>
 </head>
 
 <body>
     <div class="page-container">
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div id="modal-msg"></div>
+            </div>
+        </div>
         <div id="header">
-            <h1>Thought Not - A Memory Game</h1>
-            <h1 id="timer"></h1>
+            <h1>Grocery List Mania</h1>
+            <div id="stats" class="bold">
+                <div id="timer" class="bold"></div>
+                <div id="points-container"> Points: <span id="points" class="bold"></span></div>
+                <div id="moves-container">Moves: <span id="moves" class="bold"></span></div>
+                <div id="game-controls">
+                    <button id="try-again">Try Again</button>
+                    <button id="new-game">New Game</button>
+                </div>
+                <div id="stars">
+                    <span id="user-name"></span>
+                    <span class="fa fa-star enabled"></span>
+                    <span class="fa fa-star enabled"></span>
+                    <span class="fa fa-star enabled"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                </div>
+
+            </div>
         </div>
         <div id="game-board">
             <div class="card-container">
@@ -99,15 +123,15 @@
             </div>
             <div class="start-container">
                 <div id="start">
-                    <h2>Welcome to Thought Not!</h2>
-                    
-                    <p>Flip the cards to find a match. Be aware that matching card sets may add or remove time from the game timer. The more matches you have when the timer ends, the higher your score will be!</p>
-                        
-                        
-                    <p>Click the button to get started!
-                    </p>
-                    
-                    <button type="button" id="start-game">The Button</button>
+                    <h2>Welcome to Grocery List Mania!</h2>
+
+                    <p>Flip the cards to find a match and add the items to your grocery list.</p>
+
+                    <p>Be aware that the items on your list carry with them time warping powers! List items that are matched will either reduce or increase your overall game time.</p>
+
+                    <p>In addition to the match time warps, the faster you resolve the game board the higher your final score will be!</p>
+
+                    <button type="button" id="start-game">Start A New Game</button>
                 </div>
             </div>
         </div>
