@@ -149,6 +149,7 @@
 
 #game-controls {
     margin-top: 10px;
+    display:none;
 }
 
  .score-card {
@@ -283,6 +284,7 @@
 }
  .modal-content button {
 }
+
  .close-modal {
      color: #fff;
      float: right;

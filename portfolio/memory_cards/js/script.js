@@ -329,38 +329,39 @@ function startGame() { // Initiate game and build the cards
 }
 
 function setBoard(user) { // create listeners and pass clicks to cardControl
-    const nameDiv = document.getElementById("user-name");
-    const myCards = document.getElementsByClassName("card-container");
-    const tryAgain = document.getElementById("try-again");
-    const newGame = document.getElementById("new-game");
+    const nameDiv = document.getElementById('user-name');
+    const myCards = document.getElementsByClassName('card-container');
+    const tryAgain = document.getElementById('try-again');
+    const newGame = document.getElementById('new-game');
     const modal = document.getElementById('modal');
-    const closeModal = document.getElementsByClassName("close-modal")[0];
+    const gameControls = document.getElementById('game-controls');
+    const closeModal = document.getElementsByClassName('close-modal')[0];
     nameDiv.innerText = user.name + '\'s Rating:';
-    
+    gameControls.style.display = 'block';
     for (let i = 0; i < myCards.length; i++) { // Create listeners
-        myCards[i].style.display = "block"; // show cards
-        myCards[i].addEventListener("click", function() {
+        myCards[i].style.display = 'block'; // show cards
+        myCards[i].addEventListener('click', function() {
             let cardCover = this.children; 
             cardControl(cardCover, user); // Pass children to cardControl
         });
     }
 
-    tryAgain.addEventListener("click", function() {
+    tryAgain.addEventListener('click', function() {
         resetGame(user);
     });
     
-    newGame.addEventListener("click", function() {
+    newGame.addEventListener('click', function() {
         resetGame();
     });
 
-    closeModal.addEventListener("click", function() {
-        modal.style.display = "none";
+    closeModal.addEventListener('click', function() {
+        modal.style.display = 'none';
     });
     
     
     window.onclick = function(e) { // clicks 'outside' modal will close it
         if (e.target == modal) {
-            modal.style.display = "none";
+            modal.style.display = 'none';
         }
     }
 
@@ -370,10 +371,10 @@ function cardControl(clickedElements, user) { // control flip action of cards
     let myFlippedCards = document.querySelectorAll('.flipped:not(.matched-card)');
     if (myFlippedCards.length <= 2) { // try not to flip more than 2 cards at once.
         for (let i = 0; i < clickedElements.length; i++) {
-            if (clickedElements[i].classList.contains("cover")) { // Hide covers
-                clickedElements[i].classList.add("hidden");
+            if (clickedElements[i].classList.contains('cover')) { // Hide covers
+                clickedElements[i].classList.add('hidden');
             }
-            if (clickedElements[i].classList.contains("cards")) { 
+            if (clickedElements[i].classList.contains('cards')) { 
                 processCards(clickedElements[i], user); // Process the clicked card
             }
 
