@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="js/script.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <title>Grocery List</title>
+    <title>Grocery List Mania</title>
 </head>
 
 <body>
@@ -20,15 +20,18 @@
             </div>
         </div>
         <div id="header">
-            <h1>Grocery List</h1>
+            <h1>Grocery List Mania</h1>
             <div id="stats" class="bold">
-                <div id="timer" class="bold"></div>
-                <div id="points-container"> Points: <span id="points" class="bold"></span></div>
-                <div id="moves-container">Moves: <span id="moves" class="bold"></span></div>
+                <div id="scores">
+                    
+                    <div id="points-container"> Points: <span id="points" class="bold"></span></div>
+                    <div id="moves-container">Moves: <span id="moves" class="bold"></span></div>
+                </div>
                 <div id="game-controls">
                     <button id="try-again">Try Again</button>
                     <button id="new-game">New Game</button>
                 </div>
+                <div id="timer" class="bold"></div>
                 <div id="stars">
                     <span id="user-name"></span>
                     <span class="fa fa-star enabled"></span>
@@ -37,7 +40,6 @@
                     <span class="fa fa-star"></span>
                     <span class="fa fa-star"></span>
                 </div>
-
             </div>
         </div>
         <div id="game-board">
@@ -123,12 +125,9 @@
             </div>
             <div class="start-container">
                 <div id="start">
-                    <h2>Welcome to Grocery List!</h2>
-                    <p>It's always so hard to remember what exactly you need </p>
+                    <h2>Welcome to Grocery List Mania!</h2>
                     <p>Flip the cards to find a match and add the items to your grocery list.</p>
-
                     <p>Be aware that the items on your list carry with them time warping powers! List items that are matched will either reduce or increase your overall game time.</p>
-
                     <p>In addition to the match time warps, the faster you resolve the game board the higher your final score will be!</p>
 
                     <button type="button" id="start-game">Start A New Game</button>
