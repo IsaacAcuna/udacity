@@ -31,6 +31,7 @@ Any reasonably modern web browser with JavaScript enabled. The ability to re-try
 * [ES6](https://developer.mozilla.org/en-US/docs/Web/JavaScript) - JavaScript ( ES6 )
 * [HTML5](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5) - Project Markup Language
 * [Font Awesome](https://fontawesome.com/) - Icon set 
+* [LeaVerou](https://github.com/LeaVerou/css3patterns) - Lea Verou's Awesome CSS background patterns!
 
 ## License
 
