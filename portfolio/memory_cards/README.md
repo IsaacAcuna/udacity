@@ -21,7 +21,7 @@ The final score is calculated by the ratio of flipped cards to matched pairs and
 
 Install the files in the memory_cards folder into any directory that is being served by a web server and load the index.html page via a browser. 
 
-### Prerequisites
+### Pre-requisites
 
 Any reasonably modern web browser with JavaScript enabled. The ability to re-try the same card placement requires the use of cookies - but the game can still be played without cookies. 
 
