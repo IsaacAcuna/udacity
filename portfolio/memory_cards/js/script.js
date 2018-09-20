@@ -1,6 +1,5 @@
 'use strict';
-
-const cardData = [{
+const cardData = [{ // Our game card data.
     file: '2.svg',
     name: 'Jar of Questionable Expiration',
     msg: 'You\'ll be fine, just... fine...',
@@ -59,7 +58,6 @@ function Player(name) { // Player constructor
     this.timeBonus = [];
     this.points = [];
 }
-
 Player.prototype = { // Player methods
     constructor: Player,
     addTime: function (time) {
@@ -68,12 +66,14 @@ Player.prototype = { // Player methods
     addPoints: function (pointsAddition) {
         this.points.push(pointsAddition);
     },
-    getEffects: function () { 
-        let bonus = this.timeBonus.length > 0 ? this.timeBonus.join(',') : 'No bonuses';
+    getEffects: function () {
+        let bonus = this.timeBonus.length > 0 ? this.timeBonus.join(',') :
+            'No bonuses';
         return bonus;
     },
     getPoints: function () {
-        let points = this.points.length > 0 ? this.points.join(',') : 'No points';
+        let points = this.points.length > 0 ? this.points.join(',') :
+            'No points';
         return points;
     },
     getTime: function () {
@@ -87,65 +87,56 @@ Player.prototype = { // Player methods
     }
 }
 
-function getUserData() { // Get user's cookie and parse it into an object
-    if ( !navigator.cookieEnabled ) {
+function getUserData() { // Retrieve and parse user's cookie
+    if (!navigator.cookieEnabled) {
         return false;
     }
-    let userData = getCookie('GroceryList');
-    if (userData) {
-        return JSON.parse(userData);
+    const cookieName = "GroceryList=";
+    const cookies = document.cookie.split(';');
+    let cookie;
+    for (let i = 0; i < cookies.length; i++) { // Iterate through cookies
+        let result = cookies[i].startsWith(cookieName);
+        if (result) {
+            cookie = cookies[i];
+        }
+    }
+    if (cookie !== undefined) {
+        cookie = cookie.substring(cookieName.length);
+        return JSON.parse(cookie);
     }
     return false;
 }
 
 function setUserData(userObj) { // store user object as JSON string in cookie
-    if ( !navigator.cookieEnabled ) {
+    if (!navigator.cookieEnabled) {
         return false;
     }
     let userPayload = JSON.stringify(userObj);
     if (userPayload) {
-        setCookie('GroceryList', userPayload, 7);
+        let expiration = new Date();
+        expiration.setDate(expiration.getDate() + 30);
+        document.cookie = 'GroceryList=' + userPayload + '; expires=' +
+            expiration.toUTCString() + '; path=/';
         return true;
     }
+    return false;
 }
 
-function setCookie(name, value, days) { // Set a cookie
-    let expires = '';
-    if (days) {
-        const date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        expires = '; expires=' + date.toUTCString();
-    }
-    document.cookie = name + '=' + (value || '') + expires + '; path=/';
-    return true;
-}
-
-function getCookie(name) { // Get a cookie
-    const name = name + ''=';
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) { // Iterate through list of cookies
-        let cookie = cookies[i];
-        while (cookie.charAt(0) == ' ') cookie = cookie.substring(1, cookie.length);
-            if (cookie.indexOf(name) == 0) return cookie.substring(name.length, cookie.length); // return matched cookie
-    }
-    return null;
-}
-
-function eraseCookie(name) { // Expire a cookie
-    if ( !navigator.cookieEnabled ) {
+function expireCookie() { // delete game cookie
+    if (!navigator.cookieEnabled) {
         return false;
     }
-    document.cookie = name + '=; Path=/; Max-Age=-99999999;';
+    document.cookie = 'GroceryList=; Path=/; Max-Age=-99999999;';
     return true;
 }
 
 function popUp(content, dismissable) { // Create a modal with content, that may be dismissable.
-    let modal = document.getElementById('modal');
-    let msg = document.getElementById('modal-msg')
+    const modal = document.getElementById('modal');
+    const msg = document.getElementById('modal-msg')
     msg.innerHTML = content;
     modal.style.display = 'block';
     if (dismissable !== undefined) { // If we need to create a listener for a dismissal button.
-        let modalBtn = document.getElementById('dismiss-modal');
+        const modalBtn = document.getElementById('dismiss-modal');
         modalBtn.onclick = function () {
             modal.style.display = 'none';
         }
@@ -167,7 +158,8 @@ function shuffle(cardData) { // return randomly ordered clone of input array
 function buildCards(cardData) { // Parse a cardSet and apply card content
     for (let [card, metaData] of Object.entries(cardData)) {
         const cardDiv = document.getElementById('card' + card);
-        cardDiv.style.backgroundImage = "url('./img/" + metaData.file + "')";
+        cardDiv.style.backgroundImage = "url('./img/" + metaData.file +
+            "')";
         cardDiv.setAttribute('card-name', metaData.name);
         cardDiv.setAttribute('card-msg', metaData.msg);
         cardDiv.setAttribute('points', metaData.points);
@@ -184,27 +176,33 @@ function parseTime(secs) { // convert time from seconds to strings
     };
     if (secs >= 0 && minutes > 0) {
         return '<span id="time"> ' + minutes + ' : ' + seconds + '</span>';
-    } else if (secs >= 0 && minutes <= 0) {
+    }
+    else if (secs >= 0 && minutes <= 0) {
         return '<span id="time">' + seconds + ' Seconds</span>';
-    } else {
+    }
+    else {
         return '<span id="time">Time Traveler!</span>'; // A user can get a match bonus that will give them negative time.
     }
 }
 
 function welcome() { // Get player name and create player object
-    let name = prompt('Welcome to grocery list mania! \n\nPlease enter your name.');
+    let name = prompt(
+        'Welcome to grocery list mania!\n\nPlease enter your name.');
     let user;
-    if ( name != null && name != "") {
+    if (name != null && name != '') {
         user = new Player(name.substring(0, 10));
-    } else { // If a name is not provided, give them a silly name
-        const sillyNames = shuffle([ 'Dingus', 'Ding-Dong', 'Goofus', 'Goober', 'Ninny', 'Troglodyte' ]);
+    }
+    else { // If a name is not provided, give them a silly name
+        const sillyNames = shuffle(['Dingus', 'Ding-Dong', 'Goofus',
+            'Goober', 'Ninny', 'Troglodyte'
+        ]);
         console.log(sillyNames);
-        user = new Player(sillyNames[0]); 
+        user = new Player(sillyNames[0]);
     }
     return user;
 }
 
-function scoreBoard(user) { // Game time iteration and game completion mechanism. 
+function scoreBoard(user) { // Game time/rating iteration and game completion mechanism. 
     let curTime = user.getTime();
     const timerSpan = document.getElementById('timer');
     const pointsSpan = document.getElementById('points');
@@ -213,8 +211,10 @@ function scoreBoard(user) { // Game time iteration and game completion mechanism
     scoreDiv.style.display = 'block';
     const playTime = setInterval(function () { // Run every second until stopped
         let playerMoves = user.getFlips();
-        let effectsSum = user.timeBonus.length > 0 ? user.timeBonus.reduce((a, b) => a + b, 0) : 0; // Get the sum of the time bonus array
-        let pointsSum = user.points.length > 0 ? user.points.reduce((a, b) => a + b, 0) : 0; // Get the sum of the points array
+        let effectsSum = user.timeBonus.length > 0 ? user.timeBonus
+            .reduce((a, b) => a + b, 0) : 0; // Get the sum of the time bonus array
+        let pointsSum = user.points.length > 0 ? user.points.reduce(
+            (a, b) => a + b, 0) : 0; // Get the sum of the points array
         let timerInterval = effectsSum + curTime++;
         let gameTime = parseTime(timerInterval);
         pointsSpan.innerHTML = parseInt(pointsSum, 10);
@@ -236,25 +236,29 @@ function setStars(user) { // Handles the calculation of a users rating/defines f
         let starMsg;
         if (ratio >= 0 && ratio <= 0.05) {
             stars = 1;
-            starMsg = 'You\'re stuck behind an old lady paying with a check. Sometimes you just have bad luck!';
+            starMsg =
+                'You\'re stuck behind an old lady paying with a check. Sometimes you just have bad luck!';
         }
         if (ratio > 0.05 && ratio <= 0.15) {
             stars = 2;
-            starMsg = 'You fumble to gather exact change. People behind you in line groan. Try again to get a better score!';
+            starMsg =
+                'You fumble to gather exact change. People behind you in line groan. Try again to get a better score!';
         }
         if (ratio > 0.15 && ratio <= 0.20) {
             stars = 3;
-            starMsg = 'Your cashier has a glint of hope in their eyes. Maybe you\'ll do better next time?';
+            starMsg =
+                'Your cashier has a glint of hope in their eyes. Maybe you\'ll do better next time?';
         }
-        if (ratio > 0.20 && ratio <= 0.35) {
+        if (ratio > 0.20 && ratio <= 0.30) {
             stars = 4;
-            starMsg = 'The bagger is pretty impressed with your score! If you keep this up, you\'ll be a five star player in no time!';
+            starMsg =
+                'The bagger is pretty impressed with your score! If you keep this up, you\'ll be a five star player in no time!';
         }
-        if (ratio > 0.35) {
+        if (ratio > 0.30) {
             stars = 5;
-            starMsg = 'You\'re a grocery store legend! You\'ve mastered the grocery list experience.';
+            starMsg =
+                'You\'re a grocery store legend! You\'ve mastered the grocery list!';
         }
-
         let starDisplay = document.getElementsByClassName('fa-star');
         for (let i = 0; i < starDisplay.length; i++) { // Clear any previous ratings
             starDisplay[i].classList.remove('enabled');
@@ -264,53 +268,61 @@ function setStars(user) { // Handles the calculation of a users rating/defines f
         }
         user.starMsg = starMsg; // Store the message associated with the star rating.
     }
-
 }
 
 function resetGame(user) { // Try again or new game
     if (user !== undefined) {
         setUserData(user);
-    } else {
-        eraseCookie('GroceryList'); // If there is no user object it's a new game
+    }
+    else {
+        expireCookie(); // New game, remove cookie
     }
     location.reload(); // reload the page.
 }
 
 function gameOver(user) { // Calculate final score and build the game ending modal
     const finalTime = user.getTime();
-    const pointsSum = user.points.length > 0 ? user.points.reduce((a, b) => a + b, 0) : 0;
+    const pointsSum = user.points.length > 0 ? user.points.reduce((a, b) =>
+        a + b, 0) : 0;
     let timeBonus;
     let bonusDesc;
-    
     if (finalTime <= 40) { // Logic to apply a 'time bonus' for expeditious players
         bonusDesc = 'Wow! You\'re fast!';
         timeBonus = Math.floor(pointsSum * 2);
-    } else if (finalTime > 40 && finalTime <= 60) {
+    }
+    else if (finalTime > 40 && finalTime <= 60) {
         bonusDesc = 'Pretty swift!';
         timeBonus = Math.floor(pointsSum + pointsSum);
-    } else if (finalTime > 60 && finalTime <= 90) {
+    }
+    else if (finalTime > 60 && finalTime <= 90) {
         bonusDesc = 'Good hustle!';
         timeBonus = Math.floor(pointsSum + (pointsSum / 4));
-    } else if (finalTime > 90) {
+    }
+    else if (finalTime > 90) {
         bonusDesc = 'Slow and steady... something, something.';
         timeBonus = 0;
     }
-    
     const finalScore = pointsSum + timeBonus;
     const stars = document.getElementById('stars');
     const starHTML = stars.innerHTML;
-    
-    const html = '<div id="popup-container"><h1> Congratulations! </h1><p>' + user.starMsg + '</p><p>' + starHTML + '</p><ul class="score-card"><li>Matched Card Bonus: <span class="bold">' + pointsSum + '</span></li><li>Resolution Time: <span class="bold">' + parseTime(user.time) + '</span></li><li>Time Bonus: <span class="bold">' + timeBonus + ' (' + bonusDesc + ')</span></li><li>Final Score: <span class="bold">' + finalScore + '</span></ul><button id="try-again-over">Try Again</button><button id="new-game-over">Start A New Game</button></div>';
-    
+    const html = '<div id="popup-container"><h1> Congratulations! </h1><p>' +
+        user.starMsg + '</p><p>' + starHTML +
+        '</p><ul class="score-card"><li>Matched Card Bonus: <span class="bold">' +
+        pointsSum + '</span></li><li>Resolution Time: <span class="bold">' +
+        parseTime(user.time) +
+        '</span></li><li>Time Bonus: <span class="bold">' + timeBonus +
+        ' (' + bonusDesc +
+        ')</span></li><li>Final Score: <span class="bold">' + finalScore +
+        '</span></ul><button id="try-again-over">Try Again</button><button id="new-game-over">Start A New Game</button></div>';
     popUp(html)
-    
     const tryAgain = document.getElementById('try-again-over');
     const newGame = document.getElementById('new-game-over');
-    if ( navigator.cookieEnabled ) {
+    if (navigator.cookieEnabled) {
         tryAgain.addEventListener('click', function () {
             resetGame(user);
         });
-    } else {
+    }
+    else {
         tryAgain.style.display = 'none';
     }
     newGame.addEventListener('click', function () {
@@ -327,8 +339,9 @@ function startGame() { // Initiate game and build the cards
         const deckTwo = cardData.slice(0);
         const cardSet = shuffle(deckOne.concat(deckTwo)); // generate randomized array
         user.cardSet = cardSet;
-        buildCards(cardSet); 
-    } else { // populate the user's name and cardSet from the previous game.
+        buildCards(cardSet);
+    }
+    else { // populate the user's name and cardSet from the previous game.
         user = new Player(userData.name); // Create new user object
         user.cardSet = userData.cardSet;
         buildCards(user.cardSet); // build from cookie and add content to page
@@ -338,7 +351,6 @@ function startGame() { // Initiate game and build the cards
 }
 
 function setBoard(user) { // create listeners and pass clicks to cardControl
-    
     const nameDiv = document.getElementById('user-name');
     const myCards = document.getElementsByClassName('card-container');
     const tryAgain = document.getElementById('try-again');
@@ -346,10 +358,8 @@ function setBoard(user) { // create listeners and pass clicks to cardControl
     const modal = document.getElementById('modal');
     const cntrlsDiv = document.getElementById('game-controls');
     const closeModal = document.getElementsByClassName('close-modal')[0];
-    
     nameDiv.innerText = user.name + '\'s Rating:';
     cntrlsDiv.style.display = 'block';
-    
     for (let i = 0; i < myCards.length; i++) { // Create listeners
         myCards[i].style.display = 'block'; // show cards
         myCards[i].addEventListener('click', function () {
@@ -357,33 +367,30 @@ function setBoard(user) { // create listeners and pass clicks to cardControl
             cardControl(cardCover, user); // Pass children to cardControl
         });
     }
-    
-    if ( navigator.cookieEnabled ) {
+    if (navigator.cookieEnabled) {
         tryAgain.addEventListener('click', function () {
             resetGame(user);
         });
-    } else {
+    }
+    else {
         tryAgain.style.display = 'none';
     }
-    
     newGame.addEventListener('click', function () {
         resetGame();
     });
-
     closeModal.addEventListener('click', function () {
         modal.style.display = 'none';
     });
-
     window.onclick = function (e) { // clicks 'outside' modal will close it
         if (e.target == modal) {
             modal.style.display = 'none';
         }
     }
-
 }
 
 function cardControl(clickedElements, user) { // control flip action of cards
-    let myFlippedCards = document.querySelectorAll('.flipped:not(.matched-card)');
+    let myFlippedCards = document.querySelectorAll(
+        '.flipped:not(.matched-card)');
     if (myFlippedCards.length <= 2) { // try not to flip more than 2 cards at once.
         for (let i = 0; i < clickedElements.length; i++) {
             if (clickedElements[i].classList.contains('cover')) { // Hide covers
@@ -392,7 +399,6 @@ function cardControl(clickedElements, user) { // control flip action of cards
             if (clickedElements[i].classList.contains('cards')) {
                 processCards(clickedElements[i], user); // Process the clicked card
             }
-
         }
     }
 }
@@ -406,11 +412,13 @@ function processCards(cardElement, user) { // iterate/process flipped cards and 
     flipCount++;
     if (matchedCard) { // Matched pair of cards found
         matchCount++;
-        let points = parseInt(matchedCard.getAttribute("points"), 10);
-        let effect = parseInt(matchedCard.getAttribute("effect"), 10);
+        let points = parseInt(matchedCard.getAttribute('points'), 10);
+        let effect = parseInt(matchedCard.getAttribute('effect'), 10);
         let name = matchedCard.getAttribute('card-name');
         let message = matchedCard.getAttribute("card-msg");
-        let html = '<div id="popup-container"><h1>' + name + '</h1><p>' + message + '</p><p>Time Warp: <span class="bold">' + effect + ' Seconds</span></p><BR><button id="dismiss-modal">Okay</button></div>'; // populate modal with matched card information.
+        let html = '<div id="popup-container"><h1>' + name + '</h1><p>' +
+            message + '</p><p>Time Warp: <span class="bold">' + effect +
+            ' Seconds</span></p><BR><button id="dismiss-modal">Okay</button></div>'; // populate modal with matched card information.
         user.addPoints(points);
         user.addTime(effect);
         popUp(html, 1);
@@ -422,21 +430,25 @@ function processCards(cardElement, user) { // iterate/process flipped cards and 
 }
 
 function matchCheck() { // Check if there is a match on the board and reset the card states.
-    let myFlippedCards = document.querySelectorAll('.flipped:not(.matched-card)');
+    let myFlippedCards = document.querySelectorAll(
+        '.flipped:not(.matched-card)');
     if (myFlippedCards.length == 2) { // Only run if a match is possible
-        if (myFlippedCards[0].getAttribute('card-name') === myFlippedCards[1].getAttribute('card-name')) { // If the card names match
+        if (myFlippedCards[0].getAttribute('card-name') === myFlippedCards[
+                1].getAttribute('card-name')) { // If the card names match
             myFlippedCards[0].classList.add('matched-card');
-            myFlippedCards[0].nextElementSibling.classList.add('matched-card');
+            myFlippedCards[0].nextElementSibling.classList.add(
+                'matched-card');
             myFlippedCards[1].classList.add('matched-card');
-            myFlippedCards[1].nextElementSibling.classList.add('matched-card');
-
+            myFlippedCards[1].nextElementSibling.classList.add(
+                'matched-card');
             setTimeout(function () {
-                flipFlop(); 
+                flipFlop();
             }, 500);
             return myFlippedCards[0];
-        } else { // not a match
+        }
+        else { // not a match
             setTimeout(function () {
-                flipFlop(); 
+                flipFlop();
             }, 500);
             return false;
         }
@@ -451,13 +463,14 @@ function flipFlop() { // Scan the board and flip any unmatched cards over
             if (myCards[i].classList.contains('flipped')) {
                 myCards[i].classList.add('hidden');
                 myCards[i].classList.remove('flipped');
-            } else {
+            }
+            else {
                 myCards[i].classList.remove('flipped');
             }
         }
     }
     for (let i = 0; i < myCovers.length; i++) {
-        if (!myCovers[i].classList.contains('matched-card')) { 
+        if (!myCovers[i].classList.contains('matched-card')) {
             myCovers[i].classList.remove('hidden');
         }
     }
@@ -473,7 +486,8 @@ document.addEventListener('DOMContentLoaded', function () { // Initialize game w
             startDiv.parentElement.style.display = 'none';
             startGame();
         });
-    } else {
+    }
+    else {
         startDiv.style.display = 'none';
         startDiv.parentElement.style.display = 'none';
         setTimeout(function () {
