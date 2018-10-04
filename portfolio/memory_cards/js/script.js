@@ -60,32 +60,32 @@ function Player(name) { // Player constructor
 }
 Player.prototype = { // Player methods
     constructor: Player,
-    addTime: function (time) {
+    addTime: function(time) {
         this.timeBonus.push(time);
     },
-    addPoints: function (pointsAddition) {
+    addPoints: function(pointsAddition) {
         this.points.push(pointsAddition);
     },
-    getEffects: function () {
+    getEffects: function() {
         let bonus = this.timeBonus.length > 0 ? this.timeBonus.join(',') :
             'No bonuses';
         return bonus;
     },
-    getPoints: function () {
+    getPoints: function() {
         let points = this.points.length > 0 ? this.points.join(',') :
             'No points';
         return points;
     },
-    getTime: function () {
+    getTime: function() {
         return this.time;
     },
-    getRatio: function () {
+    getRatio: function() {
         return this.playerRatio;
     },
-    getFlips: function () {
+    getFlips: function() {
         return this.flipCount;
     }
-}
+};
 
 function getUserData() { // Retrieve and parse user's cookie
     if (!navigator.cookieEnabled) {
@@ -132,14 +132,14 @@ function expireCookie() { // delete game cookie
 
 function popUp(content, dismissable) { // Create a modal with content, that may be dismissable.
     const modal = document.getElementById('modal');
-    const msg = document.getElementById('modal-msg')
+    const msg = document.getElementById('modal-msg');
     msg.innerHTML = content;
     modal.style.display = 'block';
     if (dismissable !== undefined) { // If we need to create a listener for a dismissal button.
         const modalBtn = document.getElementById('dismiss-modal');
-        modalBtn.onclick = function () {
+        modalBtn.onclick = function() {
             modal.style.display = 'none';
-        }
+        };
     }
     return true;
 }
@@ -172,15 +172,13 @@ function parseTime(secs) { // convert time from seconds to strings
     let minutes = Math.floor(secs / 60);
     let seconds = secs - minutes * 60;
     if (seconds < 10 && seconds >= 0) {
-        seconds = "0" + seconds
-    };
+        seconds = "0" + seconds;
+    }
     if (secs >= 0 && minutes > 0) {
         return '<span id="time"> ' + minutes + ' : ' + seconds + '</span>';
-    }
-    else if (secs >= 0 && minutes <= 0) {
+    } else if (secs >= 0 && minutes <= 0) {
         return '<span id="time">' + seconds + ' Seconds</span>';
-    }
-    else {
+    } else {
         return '<span id="time">Time Traveler!</span>'; // A user can get a match bonus that will give them negative time.
     }
 }
@@ -191,8 +189,7 @@ function welcome() { // Get player name and create player object
     let user;
     if (name != null && name != '') {
         user = new Player(name.substring(0, 10));
-    }
-    else { // If a name is not provided, give them a silly name
+    } else { // If a name is not provided, give them a silly name
         const sillyNames = shuffle(['Dingus', 'Ding-Dong', 'Goofus',
             'Goober', 'Ninny', 'Troglodyte'
         ]);
@@ -209,7 +206,7 @@ function scoreBoard(user) { // Game time/rating iteration and game completion me
     const movesSpan = document.getElementById('moves');
     const scoreDiv = document.getElementById('scores');
     scoreDiv.style.display = 'block';
-    const playTime = setInterval(function () { // Run every second until stopped
+    const playTime = setInterval(function() { // Run every second until stopped
         let playerMoves = user.getFlips();
         let effectsSum = user.timeBonus.length > 0 ? user.timeBonus
             .reduce((a, b) => a + b, 0) : 0; // Get the sum of the time bonus array
@@ -273,8 +270,7 @@ function setStars(user) { // Handles the calculation of a users rating/defines f
 function resetGame(user) { // Try again or new game
     if (user !== undefined) {
         setUserData(user);
-    }
-    else {
+    } else {
         expireCookie(); // New game, remove cookie
     }
     location.reload(); // reload the page.
@@ -289,16 +285,13 @@ function gameOver(user) { // Calculate final score and build the game ending mod
     if (finalTime <= 40) { // Logic to apply a 'time bonus' for expeditious players
         bonusDesc = 'Wow! You\'re fast!';
         timeBonus = Math.floor(pointsSum * 2);
-    }
-    else if (finalTime > 40 && finalTime <= 60) {
+    } else if (finalTime > 40 && finalTime <= 60) {
         bonusDesc = 'Pretty swift!';
         timeBonus = Math.floor(pointsSum + pointsSum);
-    }
-    else if (finalTime > 60 && finalTime <= 90) {
+    } else if (finalTime > 60 && finalTime <= 90) {
         bonusDesc = 'Good hustle!';
         timeBonus = Math.floor(pointsSum + (pointsSum / 4));
-    }
-    else if (finalTime > 90) {
+    } else if (finalTime > 90) {
         bonusDesc = 'Slow and steady... something, something.';
         timeBonus = 0;
     }
@@ -314,18 +307,17 @@ function gameOver(user) { // Calculate final score and build the game ending mod
         ' (' + bonusDesc +
         ')</span></li><li>Final Score: <span class="bold">' + finalScore +
         '</span></ul><button id="try-again-over">Try Again</button><button id="new-game-over">Start A New Game</button></div>';
-    popUp(html)
+    popUp(html);
     const tryAgain = document.getElementById('try-again-over');
     const newGame = document.getElementById('new-game-over');
     if (navigator.cookieEnabled) {
-        tryAgain.addEventListener('click', function () {
+        tryAgain.addEventListener('click', function() {
             resetGame(user);
         });
-    }
-    else {
+    } else {
         tryAgain.style.display = 'none';
     }
-    newGame.addEventListener('click', function () {
+    newGame.addEventListener('click', function() {
         resetGame();
     });
 }
@@ -340,8 +332,7 @@ function startGame() { // Initiate game and build the cards
         const cardSet = shuffle(deckOne.concat(deckTwo)); // generate randomized array
         user.cardSet = cardSet;
         buildCards(cardSet);
-    }
-    else { // populate the user's name and cardSet from the previous game.
+    } else { // populate the user's name and cardSet from the previous game.
         user = new Player(userData.name); // Create new user object
         user.cardSet = userData.cardSet;
         buildCards(user.cardSet); // build from cookie and add content to page
@@ -362,30 +353,29 @@ function setBoard(user) { // create listeners and pass clicks to cardControl
     cntrlsDiv.style.display = 'block';
     for (let i = 0; i < myCards.length; i++) { // Create listeners
         myCards[i].style.display = 'block'; // show cards
-        myCards[i].addEventListener('click', function () {
+        myCards[i].addEventListener('click', function() {
             let cardCover = this.children;
             cardControl(cardCover, user); // Pass children to cardControl
         });
     }
     if (navigator.cookieEnabled) {
-        tryAgain.addEventListener('click', function () {
+        tryAgain.addEventListener('click', function() {
             resetGame(user);
         });
-    }
-    else {
+    } else {
         tryAgain.style.display = 'none';
     }
-    newGame.addEventListener('click', function () {
+    newGame.addEventListener('click', function() {
         resetGame();
     });
-    closeModal.addEventListener('click', function () {
+    closeModal.addEventListener('click', function() {
         modal.style.display = 'none';
     });
-    window.onclick = function (e) { // clicks 'outside' modal will close it
+    window.onclick = function(e) { // clicks 'outside' modal will close it
         if (e.target == modal) {
             modal.style.display = 'none';
         }
-    }
+    };
 }
 
 function cardControl(clickedElements, user) { // control flip action of cards
@@ -396,7 +386,7 @@ function cardControl(clickedElements, user) { // control flip action of cards
             if (clickedElements[i].classList.contains('cover')) { // Hide covers
                 clickedElements[i].classList.add('hidden');
             }
-            if (clickedElements[i].classList.contains('cards')) {
+            if (clickedElements[i].classList.contains('cards') && !clickedElements[i].classList.contains('flipped')) {
                 processCards(clickedElements[i], user); // Process the clicked card
             }
         }
@@ -430,24 +420,21 @@ function processCards(cardElement, user) { // iterate/process flipped cards and 
 }
 
 function matchCheck() { // Check if there is a match on the board and reset the card states.
-    let myFlippedCards = document.querySelectorAll(
-        '.flipped:not(.matched-card)');
+    let myFlippedCards = document.querySelectorAll('.flipped:not(.matched-card)');
     if (myFlippedCards.length == 2) { // Only run if a match is possible
-        if (myFlippedCards[0].getAttribute('card-name') === myFlippedCards[
-                1].getAttribute('card-name')) { // If the card names match
+        if (myFlippedCards[0].getAttribute('card-name') === myFlippedCards[1].getAttribute('card-name')) { // If the card names match
             myFlippedCards[0].classList.add('matched-card');
             myFlippedCards[0].nextElementSibling.classList.add(
                 'matched-card');
             myFlippedCards[1].classList.add('matched-card');
             myFlippedCards[1].nextElementSibling.classList.add(
                 'matched-card');
-            setTimeout(function () {
+            setTimeout(function() {
                 flipFlop();
             }, 500);
             return myFlippedCards[0];
-        }
-        else { // not a match
-            setTimeout(function () {
+        } else { // not a match
+            setTimeout(function() {
                 flipFlop();
             }, 500);
             return false;
@@ -463,8 +450,7 @@ function flipFlop() { // Scan the board and flip any unmatched cards over
             if (myCards[i].classList.contains('flipped')) {
                 myCards[i].classList.add('hidden');
                 myCards[i].classList.remove('flipped');
-            }
-            else {
+            } else {
                 myCards[i].classList.remove('flipped');
             }
         }
@@ -476,21 +462,20 @@ function flipFlop() { // Scan the board and flip any unmatched cards over
     }
 }
 
-document.addEventListener('DOMContentLoaded', function () { // Initialize game when document is ready.
+document.addEventListener('DOMContentLoaded', function() { // Initialize game when document is ready.
     let userData = getUserData(); // Check for existing user cookie
     const startDiv = document.getElementById('start');
     const startBtn = document.getElementById('start-game');
     if (!userData) { // if there is no cookie, create listener for start button
-        startBtn.addEventListener('click', function () {
+        startBtn.addEventListener('click', function() {
             startDiv.style.display = 'none';
             startDiv.parentElement.style.display = 'none';
             startGame();
         });
-    }
-    else {
+    } else {
         startDiv.style.display = 'none';
         startDiv.parentElement.style.display = 'none';
-        setTimeout(function () {
+        setTimeout(function() {
             startGame();
         }, 100);
     }
