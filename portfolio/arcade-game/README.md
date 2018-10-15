@@ -1,6 +1,22 @@
-frontend-nanodegree-arcade-game
-===============================
+# "Jogger" - Classic Arcade Game. 
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission. Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.
+This is a classic arcade game made with Javascript for my udacity microdegree program. Run past the joggers and get to the water to win. Each time you make it to the water the joggers run faster. 
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+## Getting Started
+
+Install the files in the arcade-game folder into any directory that is being served by a web server and load the index.html page via a browser. 
+
+### Pre-requisites
+
+Any reasonably modern web browser with JavaScript enabled. 
+
+## Built With
+
+* [CSS3](https://www.w3.org/Style/CSS/Overview.en.html) - Cascading Style Sheets
+* [ES6](https://developer.mozilla.org/en-US/docs/Web/JavaScript) - JavaScript ( ES6 )
+* [HTML5](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5) - Project Markup Language
+* [LeaVerou](https://github.com/LeaVerou/css3patterns) - Lea Verou's Awesome CSS background patterns!
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
