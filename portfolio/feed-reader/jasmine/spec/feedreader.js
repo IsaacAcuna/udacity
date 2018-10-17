@@ -69,7 +69,7 @@ $(function() {
          */
         
         it('is initially hidden', function() {
-            let hiddenStatus = $('body').hasClass("menu-hidden"); // class used to toggle menu
+            const hiddenStatus = $('body').hasClass("menu-hidden"); // class used to toggle menu
             expect(hiddenStatus).toBe(true);
         });
         
@@ -79,18 +79,16 @@ $(function() {
           * clicked and does it hide when clicked again.
           */
         
-        it('unfolds and folds again when clicked', function() {
-            const clicks = [ 'open', 'close' ];
-            for ( let click of clicks ) { // loop to test close and open behavior
-                $(".menu-icon-link").click();
-                let hiddenStatus = $('body').hasClass("menu-hidden");
-                if ( click ===  'open' ) {
-                    expect(hiddenStatus).toBe(false);
-                }
-                else {
-                    expect(hiddenStatus).toBe(true);
-                }
-            }
+        it('unfolds when clicked', function() {
+            $(".menu-icon-link").click();
+            const hiddenStatus = $('body').hasClass("menu-hidden"); 
+            expect(hiddenStatus).toBe(false);
+        });
+        
+        it('folds when clicked again', function() {
+            $(".menu-icon-link").click();
+            const hiddenStatus = $('body').hasClass("menu-hidden"); 
+            expect(hiddenStatus).toBe(true);
         });
     });
 
