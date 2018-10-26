@@ -1,4 +1,5 @@
 const initCache = 'v1'; // initial cache version
+const cacheWhitelist = ['v2'];
 const ourCache = [ // Files to cache
     '/',
     '/index.html',
@@ -58,7 +59,6 @@ self.addeListener('fetch', e => { // Handle fetch requests
 });
 
 self.addeListener('activate', e => { // Cleanup on activation
-    const cacheWhitelist = ['v2'];
     e.waitUntil(caches.keys()
         .then(cache => {
             return Promise.all(cacheNames.map(cache => {
